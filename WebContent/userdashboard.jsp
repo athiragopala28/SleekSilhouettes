@@ -3,6 +3,7 @@
 <%@ page import="dao.CollectionDao"%>
 <%@ page import="dao.MaterialDao"%>
 <%@ page import="java.util.List"%>
+
 <%
 	HttpSession httpsession = request.getSession(false);
 	if (session != null) {
@@ -224,16 +225,29 @@ footer {
 
 						</ul>
 					</li>
+
+					<!-- Orders Dropdown -->
+					<li class="nav-item dropdown">
+						<button class="btn btn-outline-black btn-black dropdown-toggle"
+							type="button" id="ordersDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">Orders</button>
+						<ul class="dropdown-menu" aria-labelledby="ordersDropdown">
+							<li><a class="dropdown-item" href="Order.jsp">Add Order</a></li>
+							<li><a class="dropdown-item" href="vieworders.jsp">View
+									Orders</a></li>
+						</ul>
+					</li>
 				</ul>
-				<form class="d-flex me-3" role="search">
-					<input class="form-control me-2" type="search" placeholder="Search"
-						aria-label="Search">
+				<form class="d-flex me-3" role="search" action="SearchResults.jsp"
+					method="get">
+					<input class="form-control me-2" type="search" name="query"
+						placeholder="Search Sleek Silhouettes" aria-label="Search">
 					<button class="btn btn-search" type="submit">Search</button>
 				</form>
 				<div class="d-flex align-items-center gap-3">
-					<a href="viewfavourites.jsp.jsp"
+					<a href="viewfavouritesuser.jsp"
 						class="btn btn-outline-black icon-color"><i
-						class="fas fa-heart"></i></a> <a href="Cart.jsp"
+						class="fas fa-heart"></i></a> <a href="viewcartuser.jsp"
 						class="btn btn-outline-black icon-color"><i
 						class="fas fa-shopping-cart"></i></a> <a href="profile.jsp"
 						class="btn btn-outline-black icon-color"><i
@@ -244,117 +258,11 @@ footer {
 		</div>
 	</nav>
 
-	<!-- Product Card Start -->
-	<div class="container mt-4">
-		<div class="row">
-			<!-- First Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img src="./images/full-shot-girl-posing-pink-dress.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 1</h5>
-						<p class="card-text">$29.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			<!-- Second Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img src="./images/model-wearing-beautiful-shade-clothing.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 2</h5>
-						<p class="card-text">$39.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			<!-- Third Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img src="./images/sideways-woman-posing-green-house.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 3</h5>
-						<p class="card-text">$49.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- fourth Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img
-						src="./images/high-fashion-look-glamor-stylish-sexy-beautiful-young-woman-model-summer-black-hipster-dress.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 3</h5>
-						<p class="card-text">$49.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- fifth Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img src="./images/fashion-portrait-young-elegant-woman.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 3</h5>
-						<p class="card-text">$49.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- sixth Product Card -->
-			<div class="col-md-4">
-				<div class="card card-custom">
-					<img src="./images/young-woman-beautiful-yellow-dress.jpg"
-						class="card-img-top" alt="Product Image" height=610px>
-					<div class="card-body">
-						<h5 class="card-title">Product 3</h5>
-						<p class="card-text">$49.99</p>
-						<div class="d-flex justify-content-center">
-							<a href="#" class="btn btn-outline-danger btn-custom"><i
-								class="fas fa-heart"></i></a> <a href="#"
-								class="btn btn-outline-primary btn-custom"><i
-								class="fas fa-shopping-cart"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Product Card End -->
+	<jsp:include page="viewproductuser.jsp" />
+
+
 
 	<!-- Footer Section -->
 	<footer class="mt-4">

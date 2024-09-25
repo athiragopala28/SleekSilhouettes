@@ -54,9 +54,9 @@
 }
 
 footer {
-	background-color: #001f3f; /* Navy blue */
+	background-color: #001f3f;
 	padding: 40px 0;
-	color: #ffffff; /* White text color for contrast */
+	color: #ffffff;
 	border-top: 1px solid #dee2e6;
 }
 
@@ -87,7 +87,7 @@ footer {
 }
 
 .footer-section a {
-	color: #ffffff; /* White link color */
+	color: #ffffff;
 	text-decoration: none;
 }
 
@@ -96,19 +96,27 @@ footer {
 }
 
 .social-icons a {
-	color: #ffffff; /* White icon color */
+	color: #ffffff;
 	font-size: 20px;
 	margin-right: 10px;
 }
 
 .social-icons a:hover {
-	color: #adb5bd; /* Light gray on hover */
+	color: #adb5bd;
+}
+
+.customer-feedback, .contact-us {
+	background-color: #f0f0f0;
+	padding: 20px;
+	margin: 20px 0;
 }
 </style>
 <title>Sleek Silhouettes</title>
 </head>
+
 <body>
 
+	<!-- Navbar -->
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#">Sleek Silhouettes</a>
@@ -124,22 +132,18 @@ footer {
 						<button class="btn btn-outline-black btn-black dropdown-toggle"
 							type="button" id="womenDropdown" data-bs-toggle="dropdown"
 							aria-expanded="false">Women</button>
-						<ul class="dropdown-menu" aria-labelledby="womenDropdown">
-							<li><a class="dropdown-item" href="#">Clothing</a></li>
-							<li><a class="dropdown-item" href="#">Bags</a></li>
-							<li><a class="dropdown-item" href="#">Accessories</a></li>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="viewcollections.jsp">Collections</a></li>
+							<li><a class="dropdown-item" href="viewmaterial.jsp">Materials</a></li>
 						</ul>
 					</li>
 					<li class="nav-item dropdown">
 						<button class="btn btn-outline-black btn-black dropdown-toggle"
-							type="button" id="discountDropdown" data-bs-toggle="dropdown"
-							aria-expanded="false">Discount</button>
-						<ul class="dropdown-menu" aria-labelledby="discountDropdown">
-							<li><a class="dropdown-item" href="#">10% Off</a></li>
-							<li><a class="dropdown-item" href="#">20% Off</a></li>
-							<li><a class="dropdown-item" href="#">30% Off</a></li>
-							<li><a class="dropdown-item" href="#">40% Off</a></li>
-							<li><a class="dropdown-item" href="#">50% Off</a></li>
+							type="button" id="productsDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">Products</button>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="viewProduct.jsp">Product
+									Details</a></li>
 						</ul>
 					</li>
 					<li class="nav-item dropdown">
@@ -147,18 +151,18 @@ footer {
 							type="button" id="customerCareDropdown" data-bs-toggle="dropdown"
 							aria-expanded="false">Customer Care</button>
 						<ul class="dropdown-menu" aria-labelledby="customerCareDropdown">
-							<li><a class="dropdown-item" href="#">Contact Us</a></li>
-							<li><a class="dropdown-item" href="#">FAQ</a></li>
-							<li><a class="dropdown-item" href="#">Return Policy</a></li>
-							<li><a class="dropdown-item" href="#">Shipping
-									Information</a></li>
-							<li><a class="dropdown-item" href="#">Feedback</a></li>
+							<li><a class="dropdown-item" href="feedback.jsp">Customer
+									Feedback</a></li>
+							<li><a class="dropdown-item" href="contact.jsp">Contact
+									Us</a></li>
 						</ul>
 					</li>
+
 				</ul>
-				<form class="d-flex me-3" role="search">
-					<input class="form-control me-2" type="search"
-						placeholder="Sleek Silhouettes" aria-label="Sleek Silhouettes">
+				<form class="d-flex me-3" role="search" action="SearchResults.jsp"
+					method="GET">
+					<input class="form-control me-2" type="search" name="query"
+						placeholder="Search Sleek Silhouettes" aria-label="Search">
 					<button class="btn btn-search" type="submit">Search</button>
 				</form>
 				<div class="d-flex align-items-center gap-3">
@@ -185,16 +189,16 @@ footer {
 		</div>
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img src="./images/corosel1.jpg" class="d-block w-100"
-					height="800px" alt="Slide 1">
+				<img src="./images/index1.jpg" class="d-block w-100" height="800px"
+					alt="Slide 1">
 			</div>
 			<div class="carousel-item">
-				<img src="./images/carosel2.jpg" class="d-block w-100"
-					height="800px" alt="Slide 2">
+				<img src="./images/index2.jpg" class="d-block w-100" height="800px"
+					alt="Slide 2">
 			</div>
 			<div class="carousel-item">
-				<img src="./images/carosel3.jpg" class="d-block w-100"
-					height="800px" alt="Slide 3">
+				<img src="./images/index3.jpg" class="d-block w-100" height="800px"
+					alt="Slide 3">
 			</div>
 		</div>
 		<button class="carousel-control-prev" type="button"
@@ -209,6 +213,7 @@ footer {
 		</button>
 	</div>
 
+
 	<footer>
 		<div class="container">
 			<div class="footer-content">
@@ -220,46 +225,32 @@ footer {
 						<li><a href="#">Terms and Conditions</a></li>
 						<li><a href="#">We Respect Your Privacy</a></li>
 						<li><a href="#">Return and Refund Policy</a></li>
+						<li><a href="#">FAQs</a></li>
 					</ul>
 				</div>
 				<div class="footer-section">
-					<h5>Help</h5>
+					<h5>Customer Services</h5>
 					<ul>
-						<li><a href="#">Track Your Order</a></li>
+						<li><a href="#">Help & Support</a></li>
+						<li><a href="#">Order Tracking</a></li>
+						<li><a href="#">Shipping Information</a></li>
 						<li><a href="#">Returns</a></li>
-						<li><a href="#">Cancellations</a></li>
-						<li><a href="#">Payments</a></li>
-						<li><a href="#">Customer Care</a></li>
+						<li><a href="#">Size Guide</a></li>
 					</ul>
 				</div>
 				<div class="footer-section">
-					<h5>Shop By</h5>
-					<ul>
-						<li><a href="#">Women</a></li>
-						<li><a href="#">Kids</a></li>
-						<li><a href="#">Accessories</a></li>
-					</ul>
-				</div>
-				<div class="footer-section">
-					<h5>Contact Us</h5>
-					<ul>
-						<li><a href="#">support@sleeksilhouettes.com</a></li>
-						<li><a href="#">+91 123 456 7890</a></li>
-						<li><a href="#">1234 Fashion St, City, Country</a></li>
-					</ul>
+					<h5>Follow Us</h5>
+					<div class="social-icons">
+						<a href="#"><i class="fab fa-facebook"></i></a> <a href="#"><i
+							class="fab fa-twitter"></i></a> <a href="#"><i
+							class="fab fa-instagram"></i></a> <a href="#"><i
+							class="fab fa-pinterest"></i></a>
+					</div>
 				</div>
 			</div>
-			<div class="text-center">
-				<div class="social-icons">
-					<a href="https://facebook.com" target="_blank"><i
-						class="fab fa-facebook-f"></i></a> <a href="https://twitter.com"
-						target="_blank"><i class="fab fa-twitter"></i></a> <a
-						href="https://instagram.com" target="_blank"><i
-						class="fab fa-instagram"></i></a> <a href="https://linkedin.com"
-						target="_blank"><i class="fab fa-linkedin-in"></i></a>
-				</div>
-				<p>&copy; 2024 Sleek Silhouettes. All rights reserved.</p>
-			</div>
+		</div>
+		<div class="text-center mt-4">
+			<p>&copy; 2024 Sleek Silhouettes. All rights reserved.</p>
 		</div>
 	</footer>
 

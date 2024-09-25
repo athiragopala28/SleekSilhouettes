@@ -1,91 +1,114 @@
 package dao;
 
+import bean.FavoriteBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import bean.FavoriteItemBean;
 import dbconnection.DBConnection;
 
 public class FavoriteDAO {
 
-	// Add a favorite item for a user
-	public boolean addFavorite(int userId, int productId) {
-		String sql = "INSERT INTO favorite_items (user_id, product_id) VALUES (?, ?)";
-		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, userId);
-			pstmt.setInt(2, productId);
+	// Method to add a favorite item
+	public boolean addFavorite(FavoriteBean favorite) {
+		boolean isAdded = false;
+		String query = "INSERT INTO favorite_items (userEmail, productId, itemName) VALUES (?, ?, ?)";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setString(1, favorite.getUserEmail());
+			pstmt.setInt(2, favorite.getProductId());
+			pstmt.setString(3, favorite.getItemName()); // Ensure this is set in FavoriteBean
+
 			int rowsAffected = pstmt.executeUpdate();
-			return rowsAffected > 0;
+			isAdded = rowsAffected > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+
+		return isAdded;
 	}
 
-	// Remove a favorite item for a user
-	public boolean removeFavorite(int userId, int productId) {
-		String sql = "DELETE FROM favorite_items WHERE user_id = ? AND product_id = ?";
-		try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-			stmt.setInt(1, userId);
-			stmt.setInt(2, productId);
-			int rowsAffected = stmt.executeUpdate();
-			return rowsAffected > 0;
+	// Method to remove a favorite item
+	public boolean removeFavorite(int itemId, String userEmail) {
+		boolean result = false;
+		String query = "DELETE FROM favorite_items WHERE itemId = ? AND userEmail = ?";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setInt(1, itemId);
+			pstmt.setString(2, userEmail);
+			int rowsAffected = pstmt.executeUpdate();
+			result = (rowsAffected > 0);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+
+		return result;
 	}
 
-	// Get a list of favorite product IDs for a user
-	public List<Integer> getFavoriteProductIds(int userId) {
-		List<Integer> productIds = new ArrayList<>();
-		String query = "SELECT product_id FROM favorite_items WHERE user_id = ?";
+	// Method to get a list of favorite items for a user
+	public List<FavoriteBean> getFavoritesByUser(String userEmail) {
+		List<FavoriteBean> favorites = new ArrayList<>();
+		String query = "SELECT * FROM favorite_items WHERE userEmail = ?";
 
-		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setInt(1, userId);
-			try (ResultSet rs = ps.executeQuery()) {
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setString(1, userEmail);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
-					productIds.add(rs.getInt("product_id"));
+					FavoriteBean favorite = new FavoriteBean();
+					favorite.setItemId(rs.getInt("itemId"));
+					favorite.setUserEmail(rs.getString("userEmail"));
+					favorite.setItemName(rs.getString("itemName"));
+					favorite.setProductId(rs.getInt("productId"));
+
+					favorites.add(favorite);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return productIds;
+		return favorites;
 	}
 
-	// Get a list of favorite items for a user
-	public List<FavoriteItemBean> getFavoriteItems(int userId) {
-		List<FavoriteItemBean> favoriteItems = new ArrayList<>();
-		String query = "SELECT f.favorite_id, f.user_id, f.product_id, p.product_name, p.collection_name, p.description, p.price_from, p.price_to, p.image1, p.image2, p.image3 "
-				+ "FROM favorite_items f " + "JOIN products p ON f.product_id = p.product_id " + "WHERE f.user_id = ?";
+	public List<Integer> getFavoriteProductIds(String userEmail) {
+		List<Integer> favoriteProductIds = new ArrayList<>();
+		String query = "SELECT productId FROM favorite_items WHERE userEmail = ?";
 
-		try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setInt(1, userId);
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					FavoriteItemBean item = new FavoriteItemBean();
-					item.setFavoriteId(rs.getInt("favorite_id"));
-					item.setUserId(rs.getInt("user_id"));
-					item.setProductId(rs.getInt("product_id"));
-					item.setProductName(rs.getString("product_name"));
-					item.setCollectionName(rs.getString("collection_name"));
-					item.setDescription(rs.getString("description"));
-					item.setPriceFrom(rs.getInt("price_from"));
-					item.setPriceTo(rs.getInt("price_to"));
-					item.setImage1(rs.getString("image1"));
-					item.setImage2(rs.getString("image2"));
-					item.setImage3(rs.getString("image3"));
-					favoriteItems.add(item);
-				}
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+			pstmt.setString(1, userEmail);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				int productId = rs.getInt("productId");
+				favoriteProductIds.add(productId);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return favoriteProductIds;
+	}
+
+	public boolean isFavorite(FavoriteBean favorite) {
+		boolean exists = false;
+		String query = "SELECT COUNT(*) FROM favorite_items WHERE userEmail = ? AND productId = ?";
+
+		try (Connection conn = DBConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+			pstmt.setString(1, favorite.getUserEmail());
+			pstmt.setInt(2, favorite.getProductId());
+
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				exists = rs.getInt(1) > 0;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return favoriteItems;
+
+		return exists;
 	}
 }

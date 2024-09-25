@@ -2,12 +2,14 @@
 <%@page import="dao.CollectionDao"%>
 <%@page import="dao.UserDao"%>
 <%@page import="dao.FeedbackDao"%>
-<!-- Import FeedbackDao -->
+<%@page import="dao.OrderDao"%>
+
 <%@page import="java.sql.SQLException"%>
 <%@page import="javax.servlet.http.HttpSession"%>
 <%@page import="javax.servlet.http.HttpServletRequest"%>
 <%@page import="javax.servlet.http.HttpServletResponse"%>
 <%@page import="javax.servlet.ServletException"%>
+
 
 <%
 	HttpSession httpsession = request.getSession(false);
@@ -37,6 +39,22 @@
 	rel="stylesheet">
 <style>
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa; /* Light gray background color */
+    /* Optional: Background image */
+    /* background-image: url('path/to/your/image.jpg'); */
+    /* background-size: cover; */
+    /* background-position: center; */
+}
+
+.navbar-brand {
+    flex-grow: 1;
+    font-size: 1.5rem;
+    text-align: left;
+}
+
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
@@ -94,9 +112,9 @@ body {
 }
 
 footer {
-	background-color: #001f3f; /* Navy blue */
+	background-color: #001f3f;
 	padding: 20px 0;
-	color: #ffffff; /* White text color for contrast */
+	color: #ffffff;
 	border-top: 1px solid #dee2e6;
 	margin-top: auto;
 }
@@ -128,7 +146,7 @@ footer {
 }
 
 .footer-section a {
-	color: #ffffff; /* White link color */
+	color: #ffffff;
 	text-decoration: none;
 }
 
@@ -137,13 +155,13 @@ footer {
 }
 
 .social-icons a {
-	color: #ffffff; /* White icon color */
+	color: #ffffff;
 	font-size: 20px;
 	margin-right: 10px;
 }
 
 .social-icons a:hover {
-	color: #adb5bd; /* Light gray on hover */
+	color: #adb5bd;
 }
 </style>
 </head>
@@ -159,7 +177,8 @@ footer {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<!-- Category Dropdown -->
+					<!-- Existing Dropdowns -->
+					<!-- Collections Dropdown -->
 					<li class="nav-item dropdown">
 						<button class="btn btn-outline-black btn-black dropdown-toggle"
 							type="button" id="categoryDropdown" data-bs-toggle="dropdown"
@@ -215,12 +234,26 @@ footer {
 									Feedback</a></li>
 						</ul>
 					</li>
+					<!-- Orders Dropdown -->
+					<li class="nav-item dropdown">
+						<button class="btn btn-outline-black btn-black dropdown-toggle"
+							type="button" id="ordersDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false">Orders</button>
+						<ul class="dropdown-menu" aria-labelledby="ordersDropdown">
+							<li><a class="dropdown-item" href="vieworders.jsp">View
+									Orders</a></li>
+							<li><a class="dropdown-item" href="manageorders.jsp">Manage
+									Orders</a></li>
+						</ul>
+					</li>
 				</ul>
-				<form class="d-flex me-3" role="search">
-					<input class="form-control me-2" type="search"
-						placeholder="Sleek Silhouettes" aria-label="Search">
+				<form class="d-flex me-3" role="search" action="SearchResults.jsp"
+					method="get">
+					<input class="form-control me-2" type="search" name="query"
+						placeholder="Search Sleek Silhouettes" aria-label="Search">
 					<button class="btn btn-search" type="submit">Search</button>
 				</form>
+
 				<a href="logout.jsp">
 					<button type="button" class="btn btn-black">LogOut</button>
 				</a>
@@ -298,14 +331,24 @@ footer {
 				</div>
 			</div>
 			<div class="col-md-3">
-				<div class="card text-center card-services">
-					<div class="card-body">
-						<div class="text-content">
-							<h5 class="card-title">Order Placed</h5>
-							<p class="card-text">20</p>
-						</div>
-					</div>
-				</div>
+    <div class="card text-center card-services">
+        <div class="card-body">
+            <div class="text-content">
+                <h5 class="card-title">Order Placed</h5>
+                <p class="card-text">
+                    <%
+                    OrderDao orderDao = new OrderDao();
+                        int orderCount = 0;
+                        try {
+                            orderCount = orderDao.getOrderCount();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    %>
+                    <%= orderCount %>
+                </p>
+            </div>
+        </div>
 			</div>
 		</div>
 		<script

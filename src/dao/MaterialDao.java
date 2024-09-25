@@ -113,4 +113,27 @@ public class MaterialDao {
 		}
 	}
 
+	// Search materials by name or type
+	public List<MaterialBean> searchMaterials(String query) {
+		String sql = "SELECT * FROM materials WHERE material_name LIKE ? OR material_type LIKE ?";
+		List<MaterialBean> materials = new ArrayList<>();
+		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setString(1, "%" + query + "%");
+			stmt.setString(2, "%" + query + "%");
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					MaterialBean material = new MaterialBean();
+					material.setMaterialId(rs.getInt("id"));
+					material.setName(rs.getString("material_name"));
+					material.setType(rs.getString("material_type"));
+					material.setDescription(rs.getString("description"));
+					materials.add(material);
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("SQL Exception in searchMaterials: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return materials;
+	}
 }

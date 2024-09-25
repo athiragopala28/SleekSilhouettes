@@ -2,51 +2,60 @@ package bean;
 
 import java.sql.Timestamp;
 
-public class Cartbean {
-	private int id;
-	private int userId;
-	private int productId;
-	private int quantity;
-	private Timestamp addedAt;
+public class CartBean {
+    private int cartId;
+    private String userEmail;
+    private String productName;
+    private int quantity;
+    private double amount;
+    private Timestamp addedDate;
 
-	// Getters and Setters
-	public int getId() {
-		return id;
-	}
+    // Getters and Setters
+    public int getCartId() {
+        return cartId;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
+    }
 
-	public int getUserId() {
-		return userId;
-	}
+    public String getUserEmail() {
+        return userEmail;
+    }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 
-	public int getProductId() {
-		return productId;
-	}
+    public String getProductName() {
+        return productName;
+    }
 
-	public void setProductId(int productId) {
-		this.productId = productId;
-	}
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-	public Timestamp getAddedAt() {
-		return addedAt;
-	}
+    public double getAmount() {
+        return amount;
+    }
 
-	public void setAddedAt(Timestamp addedAt) {
-		this.addedAt = addedAt;
-	}
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public Timestamp getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(Timestamp addedDate) {
+        this.addedDate = addedDate;
+    }
 }

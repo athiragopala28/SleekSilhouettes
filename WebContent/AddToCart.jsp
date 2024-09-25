@@ -1,61 +1,74 @@
-<%@ page import="dao.CartDao"%>
-<%@ page import="bean.Cartbean"%>
-<%@ page import="dbconnection.DBConnection"%>
-<%@ page import="java.util.List"%>
+<%@ page import="dao.CartDao" %>
+<%@ page import="bean.CartBean" %>
+<%@ page import="bean.Product" %>
+<%@ page import="dao.ProductDao" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.io.IOException" %>
 
 <%
-	// Check if userId is present in the session
-	Integer userId = (Integer) session.getAttribute("userId");
-	if (userId == null) {
-		// Redirect to login page if user is not logged in
-		response.sendRedirect("login.jsp");
-		return;
-	}
+    HttpSession httpsession = request.getSession(false);
+    String userEmail = null;
 
-	// Retrieve parameters safely
-	String productIdParam = request.getParameter("productId");
-	String quantityParam = request.getParameter("quantity");
+    if (httpsession != null) {
+        userEmail = (String) httpsession.getAttribute("email");
 
-	if (productIdParam == null || quantityParam == null) {
-		out.println("Missing productId or quantity parameter.");
-		return;
-	}
+        if (userEmail == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+    } else {
+        response.sendRedirect("login.jsp");
+        return;
+    }
 
-	int productId;
-	int quantity;
+    String productId = request.getParameter("productId");
+    String quantityStr = request.getParameter("quantity");
 
-	try {
-		productId = Integer.parseInt(productIdParam);
-		quantity = Integer.parseInt(quantityParam);
-	} catch (NumberFormatException e) {
-		out.println("Invalid productId or quantity format.");
-		return;
-	}
+    // Validate quantity input
+    if (productId == null || quantityStr == null) {
+        out.print("<script>alert('Invalid product or quantity.'); window.location.href='index.jsp';</script>");
+        return;
+    }
 
-	// Add product to cart
-	CartDao cartDao = new CartDao();
-	boolean success = cartDao.addProductToCart(userId, productId, quantity); // Ensure you handle product name and price
+    int quantity = 0;
+    try {
+        quantity = Integer.parseInt(quantityStr);
+    } catch (NumberFormatException e) {
+        out.print("<script>alert('Invalid quantity. Please enter a number.'); window.location.href='index.jsp';</script>");
+        return;
+    }
 
-	if (success) {
-		response.sendRedirect("Cart.jsp");
-	} else {
-		out.println("Failed to add product to cart.");
-	}
+    ProductDao productDao = new ProductDao();
+    Product product = productDao.getProductById(Integer.parseInt(productId));
+
+    if (product != null) {
+        CartDao cartDao = new CartDao();
+        CartBean existingItem = cartDao.getCartItemByUserEmailAndProductName(userEmail, product.getProductName());
+
+        if (existingItem != null) {
+            // Update the quantity and amount
+            int newQuantity = existingItem.getQuantity() + quantity;
+            double newAmount = product.getPrice() * newQuantity; // Assuming price is double
+            existingItem.setQuantity(newQuantity);
+            existingItem.setAmount(newAmount);
+            cartDao.updateCartItem(existingItem);
+            out.print("<script>alert('Check your cart!'); window.location.href='viewcartuser.jsp';</script>");
+        } else {
+            // Add new item to the cart
+            CartBean cartItem = new CartBean();
+            cartItem.setUserEmail(userEmail);
+            cartItem.setProductName(product.getProductName());
+            cartItem.setQuantity(quantity);
+            cartItem.setAmount(product.getPrice());
+
+            boolean added = cartDao.addToCart(cartItem);
+            if (added) {
+                out.print("<script>alert('Product added to cart successfully!'); window.location.href='viewcartuser.jsp';</script>");
+            } else {
+                out.print("<script>alert('Failed to add product to cart.'); window.location.href='viewcartuser.jsp';</script>");
+            }
+        }
+    } else {
+        out.print("<script>alert('Product not found.'); window.location.href='index.jsp';</script>");
+    }
 %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>Add to Cart</title>
-</head>
-<body>
-	<h1>Add Product to Cart</h1>
-	<form method="post">
-		<label>Product ID:</label> <input type="text" name="productId"
-			required /><br /> <label>Quantity:</label> <input type="number"
-			name="quantity" min="1" required /><br /> <input type="submit"
-			value="Add to Cart" />
-	</form>
-	<a href="Cart.jsp">Back to Cart</a>
-</body>
-</html>
